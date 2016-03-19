@@ -1,7 +1,22 @@
 {
-  "name": "HelloIonic",
+  "name": "ionic-starter",
   "private": "true",
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#1.2.4"
+  },
+  "_dependencies":{
+    "angular": "^1.5.2",
+    "angular-ui-router": "^0.2.18",
+    "angular-sanitize": "^1.5.2",
+    "angular-animate": "^1.5.2"
+  },
+  "overrides":{
+  	"ionic": {
+  		"main": [
+	      "fonts/*",
+	      "js/ionic.js",
+	      "js/ionic-angular.js"
+	    ]
+  	}
   }
 }
