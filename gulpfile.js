@@ -1,17 +1,30 @@
 var gulp = require('gulp');
 var g = require('gulp-load-plugins')();
 /*
-var gutil = require('gulp-util');
-var concat = require('gulp-concat');
-var sass = require('gulp-sass');
-var minifyCss = require('gulp-minify-css');
-var rename = require('gulp-rename');
+gulp-util
+gulp-concat
+gulp-sass
+gulp-minify-css
+gulp-rename
+gulp-debug
+gulp-ng-annotate
+gulp-rimraf
+gulp-uglify
+gulp-until
+gulp-html-src
+gulp-assets
+gulp-add-src
+gulp-if
+gulp-match
+gulp-notify
+gulp-base
 */
 var bower = require('bower');
 var sh = require('shelljs');
 var runSequence = require('run-sequence');
 var chalk = require('chalk');
 var wiredep = require('wiredep').stream;
+var del = require('del');
 
 var paths = {
   sass: './src/scss',
@@ -27,10 +40,10 @@ var paths = {
   src: './src'
 };
 
-gulp.task('default', ['sass']);
+gulp.task('default', ['debug']);
 
 gulp.task('sass', function(done) {
-  gulp.src(paths.sass + '/**/*.scss')
+  gulp.src(paths.sass + '/ionic.app.scss')
     .pipe(g.sass())
     .on('error', g.sass.logError)
     .pipe(g.rename({ basename: 'ionic.customized' }))
@@ -49,26 +62,36 @@ gulp.task('wiredep', function() {
   return gulp.src(paths.html.main)
     .pipe(wiredep({
       devDependencies: true,
-      ignorePath: '..'
+      ignorePath: '../',
+      fileTypes: {
+        html: {
+          replace: {
+            js: '<script src="./{{filePath}}"></script>',
+            css: '<link rel="stylesheet" href="./{{filePath}}" />'
+          }
+        }
+      }
     }))
     .pipe(gulp.dest(paths.temp));
-})
+});
 
 gulp.task('clean-www', function() {
-  gulp.src(paths.www + '/**/*', { read: false })
-    .pipe(g.clean())
-    .on('end', function() {
-      console.log(chalk.blue('www folder cleared') 
-        + vinyl.paths);
-    })
-})
+  del(paths.www + '/*');
+  console.log(chalk.blue('www folder cleared'));
+
+//  return gulp.src(paths.www + '/**/*', { read: false })
+//    .pipe(g.rimraf())
+//    .pipe(g.wait(3000))
+//    .on('end', function() {
+//    });  
+});
 
 gulp.task('useref', function() {
   var jsFilter = g.filter('**/*.js', 
     { restore: true, dot: true });
   var cssFilter = g.filter('**/*.css', 
     { restore: true, dot: true });
-  gulp.src(paths.html.bowermain)
+  return gulp.src(paths.html.bowermain)
     .pipe(g.useref({
       //searchPath: [paths.temp, paths.src]
     }))
@@ -86,24 +109,49 @@ gulp.task('useref', function() {
     .on('end', function() {
       console.log(chalk.blue('js css files are built'));
     });
-})
+});
+
+gulp.task('useref:nomod', function() {
+  var jsFilter = g.filter('**/*.js', 
+    { restore: true, dot: true });
+  var cssFilter = g.filter('**/*.css', 
+    { restore: true, dot: true });
+  return gulp.src(paths.html.bowermain)
+    .pipe(g.useref.assets({
+      //searchPath: [paths.temp, paths.src]
+      noconcat: true
+    }))
+    .pipe(g.addSrc(paths.html.bowermain))
+    .pipe(jsFilter)
+    .pipe(g.ngAnnotate())
+    .pipe(jsFilter.restore)
+    .pipe(g.if('../bower_components/**/*', g.base('.')))
+    .pipe(g.if('../src/**/*', g.base('./src')))
+    .pipe(gulp.dest(paths.www))
+    .on('end', function() {
+      console.log(chalk.blue('js css files are added'));
+    });
+});
 
 gulp.task('copy', ['copy:font'], function() {
-  gulp.src([paths.src + '/img/**',
+  return gulp.src([paths.src + '/img/**',
     paths.src + '/templates/**/*.html'],
     { base: paths.src })
       .pipe(gulp.dest(paths.www));
-})
+});
 
 gulp.task('copy:font', function() {
-  gulp.src(paths.bower + '/ionic/fonts/**')
+  return gulp.src(paths.bower + '/ionic/fonts/**')
       .pipe(gulp.dest(paths.www + '/fonts/'));
-})
-
+});
 
 gulp.task('build', function() {
-  runSequence('sass', 'wiredep', 'clean-www', 'useref', 'copy');
-})
+  runSequence('clean-www', 'sass', 'wiredep', 'useref', 'copy');
+});
+
+gulp.task('debug', function() {
+  runSequence('clean-www', 'sass', 'wiredep', 'useref:nomod', 'copy')
+});
 
 gulp.task('watch', function() {
   gulp.watch(paths.sass 

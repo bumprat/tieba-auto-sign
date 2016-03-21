@@ -12,15 +12,25 @@
   "devDependencies": {
     "bower": "^1.7.7",
     "chalk": "^1.1.1",
+    "del": "^2.2.0",
     "gulp": "^3.9.1",
+    "gulp-add": "0.0.2",
+    "gulp-add-src": "^0.2.0",
+    "gulp-assets": "^0.2.2",
+    "gulp-base": "^1.1.1",
     "gulp-clean": "^0.3.2",
     "gulp-debug": "^2.1.2",
     "gulp-filter": "^4.0.0",
+    "gulp-html-src": "^1.0.0",
+    "gulp-if": "^2.0.0",
     "gulp-load-plugins": "^1.2.0",
+    "gulp-match": "^1.0.1",
     "gulp-ng-annotate": "^2.0.0",
+    "gulp-notify": "^2.2.0",
+    "gulp-replace-path": "^0.4.0",
     "gulp-rimraf": "^0.2.0",
     "gulp-uglify": "^1.5.3",
-    "gulp-useref": "^3.0.8",
+    "gulp-useref": "^2.1.0",
     "gulp-util": "^2.2.14",
     "gulp-wait": "0.0.2",
     "run-sequence": "^1.1.5",
@@ -35,9 +45,6 @@
     "ionic-plugin-keyboard"
   ],
   "cordovaPlatforms": [
-    {
-      "platform": "android",
-      "locator": "browser"
-    }
+    "android"
   ]
 }
