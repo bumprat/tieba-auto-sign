@@ -33,6 +33,7 @@
     "gulp-useref": "^2.1.0",
     "gulp-util": "^2.2.14",
     "gulp-wait": "0.0.2",
+    "gulp-wiredep": "0.0.0",
     "run-sequence": "^1.1.5",
     "shelljs": "^0.3.0"
   },
@@ -44,5 +45,7 @@
     "cordova-plugin-statusbar",
     "ionic-plugin-keyboard"
   ],
-  "cordovaPlatforms": []
+  "cordovaPlatforms": [
+    "android"
+  ]
 }

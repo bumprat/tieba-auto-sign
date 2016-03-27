@@ -1,28 +1,30 @@
-angular.module('starter.controllers', [])
+angular.module('app.controllers', [])
+  
+.controller('page2Ctrl', function($scope, $ionicTabsDelegate) {
+  	swaptabs($scope, $ionicTabsDelegate);
+})
+   
+.controller('page3Ctrl', function($scope, $ionicTabsDelegate) {
+	swaptabs($scope, $ionicTabsDelegate);
+})
+   
+.controller('page4Ctrl', function($scope, $ionicTabsDelegate) {
+	swaptabs($scope, $ionicTabsDelegate);
+})
 
-.controller('DashCtrl', ["$scope", function($scope) {}])
 
-.controller('ChatsCtrl', ["$scope", "Chats", function($scope, Chats) {
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
+function swaptabs($scope, $ionicTabsDelegate){	
+    $scope.goForward = function () {
+        var selected = $ionicTabsDelegate.selectedIndex();
+        if (selected != -1) {
+            $ionicTabsDelegate.select(selected + 1);
+        }
+    };
 
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
-  };
-}])
-
-.controller('ChatDetailCtrl', ["$scope", "$stateParams", "Chats", function($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
-}])
-
-.controller('AccountCtrl', ["$scope", function($scope) {
-  $scope.settings = {
-    enableFriends: true
-  };
-}]);
+    $scope.goBack = function () {
+        var selected = $ionicTabsDelegate.selectedIndex();
+        if (selected != -1 && selected != 0) {
+            $ionicTabsDelegate.select(selected - 1);
+        }
+    };
+}
